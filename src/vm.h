@@ -2,6 +2,7 @@
 #define VM_H
 
 #include "stack.h"
+#include "object.h"
 
 #define MEM_SIZE 1024
 #define RET_STACK_SIZE 1024
@@ -16,6 +17,8 @@ typedef struct{
     int ret_stack[RET_STACK_SIZE];
     int rsp;
     long instruction_count;
+
+    Obj *heap_head;
 }VM;
 
 void vm_init(VM *vm,int *bytecode);
