@@ -27,6 +27,7 @@ void vm_init(VM *vm,int *bytecode){
     vm->running = 1;
     vm->rsp = -1;
     vm->instruction_count = 0;
+    vm->heap_head = NULL;
     for(int i=0;i<MEM_SIZE;i++){
         vm->memory[i] = 0; //clear the memory
         vm->valid[i] = 0; //nothing is valid initialy

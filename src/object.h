@@ -9,11 +9,12 @@ typedef enum{
 
 typedef struct Obj{
     ObjType type;
+    int marked;
     struct Obj *next;
     union{
         struct{
-            value left;
-            value right;
+            Value left;
+            Value right;
         }pair;
     }as;
 }obj;

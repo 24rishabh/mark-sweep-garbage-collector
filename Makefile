@@ -1,40 +1,43 @@
 # Compiler and flags
-CC      = gcc
-CFLAGS  = -Wall -Wextra -g -I./src
+CC = gcc
+CFLAGS = -Wall -Wextra -g
 
 # Directories
 SRC_DIR = src
+BENCH_DIR = benchmark
 
 # Targets
-VM  = vm
+VM = vm
 ASM = asm
 
 # Source files
-VM_SRC  = $(SRC_DIR)/main.c \
-          $(SRC_DIR)/vm.c \
-          $(SRC_DIR)/stack.c \
-          $(SRC_DIR)/loader.c \
-          $(SRC_DIR)/value.c
+VM_SRC = \
+	$(SRC_DIR)/main.c \
+	$(SRC_DIR)/vm.c \
+	$(SRC_DIR)/stack.c \
+	$(SRC_DIR)/loader.c \
+	$(SRC_DIR)/value.c \
+	$(SRC_DIR)/object.c
 
 ASM_SRC = $(SRC_DIR)/asm.c
 
 # Default target
 all: $(VM) $(ASM)
 
-# Build virtual machine
+# Build Virtual Machine
 $(VM): $(VM_SRC)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(VM_SRC) -o $(VM)
 
-# Build assembler
+# Build Assembler
 $(ASM): $(ASM_SRC)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $(ASM_SRC) -o $(ASM)
 
-# Run VM with full test
+# Run one benchmark (example: program1.asm)
 run: $(VM) $(ASM)
-	./$(ASM) full_test.asm full_test.bc
-	./$(VM) full_test.bc
+	./$(ASM) $(BENCH_DIR)/program1.asm program1.bc
+	./$(VM) program1.bc
 
-# Clean build files
+# Clean generated files
 clean:
 	rm -f $(VM) $(ASM) *.bc *.o
 
