@@ -1,29 +1,37 @@
 # Compiler and flags
-CC = gcc
-CFLAGS = -Wall -Wextra -g
+CC      = gcc
+CFLAGS  = -Wall -Wextra -g -I./src
+
+# Directories
+SRC_DIR = src
 
 # Targets
-VM = vm
+VM  = vm
 ASM = asm
 
 # Source files
-VM_SRC = main.c vm.c stack.c loader.c value.c
-ASM_SRC = asm.c
+VM_SRC  = $(SRC_DIR)/main.c \
+          $(SRC_DIR)/vm.c \
+          $(SRC_DIR)/stack.c \
+          $(SRC_DIR)/loader.c \
+          $(SRC_DIR)/value.c
+
+ASM_SRC = $(SRC_DIR)/asm.c
 
 # Default target
 all: $(VM) $(ASM)
 
 # Build virtual machine
 $(VM): $(VM_SRC)
-	$(CC) $(CFLAGS) $(VM_SRC) -o $(VM)
+	$(CC) $(CFLAGS) $^ -o $@
 
 # Build assembler
 $(ASM): $(ASM_SRC)
-	$(CC) $(CFLAGS) $(ASM_SRC) -o $(ASM)
+	$(CC) $(CFLAGS) $^ -o $@
 
 # Run VM with full test
 run: $(VM) $(ASM)
-	./asm full_test.asm full_test.bc
+	./$(ASM) full_test.asm full_test.bc
 	./$(VM) full_test.bc
 
 # Clean build files
