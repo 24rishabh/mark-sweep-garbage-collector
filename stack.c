@@ -1,12 +1,13 @@
 #include "stack.h"
 #include <stdio.h>
 #include<stdlib.h>  // exit(int status)
+#include "value.h"
 
 void init_stack(Stack *s){
     s->sp = -1;
 }
 
-void push(Stack *s,int value){
+void push(Stack *s,Value value){
     if(s->sp>=STACK_SIZE-1){
         printf("Stack Overflow\n");
         exit(1);
@@ -14,7 +15,7 @@ void push(Stack *s,int value){
     s->data[++s->sp] = value;
 }
 
-int pop(Stack *s){
+Value pop(Stack *s){
     if(s->sp<0){
         printf("Stack underflow\n");
         exit(1);
@@ -22,7 +23,7 @@ int pop(Stack *s){
     return s->data[s->sp--];
 }
 
-int peek(Stack *s){
+Value peek(Stack *s){
     if(s->sp<0){
         printf("Stack is empty\n");
         exit(1);

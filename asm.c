@@ -3,6 +3,24 @@
 #include <string.h>
 #include <ctype.h>
 
+/*
+  Lab-4 Assembler (two-pass) with label support.
+
+  Input  : .asm text
+  Output : .bc text containing integers separated by spaces
+
+  IMPORTANT for this VM:
+  - Jump/CALL addresses are indices in the integer bytecode array.
+    (Because vm->pc indexes int* bytecode, and each opcode/operand is one int.)
+
+  Supported label syntax:
+    LABEL:
+    LABEL: INSTR [OPERAND]
+
+  Comments:
+    ';' or '#' start a comment until end of line.
+*/
+
 typedef struct {
     const char *mnemonic;
     int opcode;
@@ -109,6 +127,8 @@ static void add_label(const char *name, int addr) {
     label_count++;
 }
 
+/* Reads next whitespace-separated token from *p into tok.
+   Advances *p. Returns 1 if a token was read, 0 otherwise. */
 static int next_token(char **p, char tok[128]) {
     char *s = *p;
     s = ltrim(s);
@@ -135,7 +155,7 @@ static int parse_int_strict(const char *s, int *out) {
 
 static void pass1_collect_labels(FILE *fp) {
     char line[512];
-    int out_index = 0; 
+    int out_index = 0; /* index in emitted integer stream */
 
     while (fgets(line, sizeof(line), fp)) {
         strip_comment(line);
@@ -143,30 +163,36 @@ static void pass1_collect_labels(FILE *fp) {
         char *p = ltrim(line);
         if (*p == '\0' || is_blank(p)) continue;
 
-        
+        /* possibly: LABEL:  or  LABEL: INSTR ... */
         char tok[128];
         while (next_token(&p, tok)) {
             if (is_label_token(tok)) {
                 char lname[MAX_NAME];
                 label_name_from_token(tok, lname);
                 add_label(lname, out_index);
+                /* continue parsing rest of line (could have an instruction too) */
                 continue;
             }
+
+            /* tok is mnemonic */
             Instr ins;
             if (!find_instr(tok, &ins)) {
                 fprintf(stderr, "Unknown instruction in pass1: %s\n", tok);
                 exit(1);
             }
 
-            out_index += 1; 
+            out_index += 1; /* opcode */
             if (ins.has_operand) {
+                /* skip operand token if present */
                 char op[128];
                 if (!next_token(&p, op)) {
                     fprintf(stderr, "Missing operand for %s\n", ins.mnemonic);
                     exit(1);
                 }
-                out_index += 1;
+                out_index += 1; /* operand */
             }
+
+            /* one instruction per line */
             break;
         }
     }
@@ -184,14 +210,18 @@ static void pass2_emit(FILE *fp, FILE *out) {
         char tok[128];
         while (next_token(&p, tok)) {
             if (is_label_token(tok)) {
+                /* skip label token */
                 continue;
             }
+
             Instr ins;
             if (!find_instr(tok, &ins)) {
                 fprintf(stderr, "Unknown instruction: %s\n", tok);
                 exit(1);
             }
+
             fprintf(out, "%d ", ins.opcode);
+
             if (ins.has_operand) {
                 char op[128];
                 if (!next_token(&p, op)) {
@@ -201,8 +231,10 @@ static void pass2_emit(FILE *fp, FILE *out) {
 
                 int val;
                 if (parse_int_strict(op, &val)) {
+                    /* numeric operand */
                     fprintf(out, "%d ", val);
                 } else {
+                    /* label operand */
                     int addr = find_label_addr(op);
                     if (addr == -1) {
                         fprintf(stderr, "Undefined label: %s\n", op);
@@ -212,6 +244,7 @@ static void pass2_emit(FILE *fp, FILE *out) {
                 }
             }
 
+            /* one instruction per line */
             break;
         }
     }
@@ -223,6 +256,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    /* PASS 1 */
     FILE *in1 = fopen(argv[1], "r");
     if (!in1) {
         perror("failed to open input.asm");
@@ -232,6 +266,7 @@ int main(int argc, char *argv[]) {
     pass1_collect_labels(in1);
     fclose(in1);
 
+    /* PASS 2 */
     FILE *in2 = fopen(argv[1], "r");
     FILE *out = fopen(argv[2], "w");
     if (!in2 || !out) {
