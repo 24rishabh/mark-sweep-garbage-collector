@@ -3,6 +3,7 @@
 #include "loader.h"
 #include<stdlib.h>
 #include<time.h>
+#include "value.h"
 
 int main(int argc, char *argv[]){
     if(argc<2){
@@ -23,8 +24,8 @@ int main(int argc, char *argv[]){
     printf("Execution time: %.6f seconds\n", exec_time);
     printf("Instructions executed: %ld\n", vm.instruction_count);
     if(vm.stack.sp>=0){
-        int result = pop(&vm.stack);
-        printf("Result: %d\n",result);
+        Value result = pop(&vm.stack);
+        printf("Result: %d\n",result.as.i);
     }
     else{
         printf("Stack empty at the execution\n");

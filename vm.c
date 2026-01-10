@@ -1,5 +1,6 @@
 #include "vm.h"
 #include<stdio.h>
+#include "value.h"
 
 #define OP_PUSH 0x01
 #define OP_POP 0x02
@@ -39,7 +40,7 @@ void vm_run(VM *vm){
         switch(instruction){
             case OP_PUSH:{
                 int value = vm->bytecode[vm->pc++];
-                push(&vm->stack,value);
+                push(&vm->stack,make_int_value(value));
                 break;
             }
             case OP_POP: {
@@ -47,44 +48,44 @@ void vm_run(VM *vm){
                 break;
             }
             case OP_DUP:{
-                int value = peek(&vm->stack);
+                Value value = peek(&vm->stack);
                 push(&vm->stack,value);
                 break;
             }
             case OP_ADD:{
-                int b = pop(&vm->stack);
-                int a = pop(&vm->stack);
-                push(&vm->stack,a+b);
+                Value b = pop(&vm->stack);
+                Value a = pop(&vm->stack);
+                push(&vm->stack,make_int_value(a.as.i + b.as.i));
                 break;
             }
             case OP_SUB:{
-                int b = pop(&vm->stack);
-                int a = pop(&vm->stack);
-                push(&vm->stack,a-b);
+                Value b = pop(&vm->stack);
+                Value a = pop(&vm->stack);
+                push(&vm->stack,make_int_value(a.as.i - b.as.i));
                 break;
             }
             case OP_MUL:{
-                int b = pop(&vm->stack);
-                int a = pop(&vm->stack);
-                push(&vm->stack,a*b);
+                Value b = pop(&vm->stack);
+                Value a = pop(&vm->stack);
+                push(&vm->stack,make_int_value(a.as.i * b.as.i));
                 break;
             }
             case OP_DIV:{
-                int b = pop(&vm->stack);
-                int a = pop(&vm->stack);
-                if(b==0){
+                Value b = pop(&vm->stack);
+                Value a = pop(&vm->stack);
+                if(b.as.i==0){
                     printf("Runtime error: division by zero\n");
                     vm->running = 0;
                     break;
                 }
-                push(&vm->stack,a/b);
+                push(&vm->stack,make_int_value(a.as.i/b.as.i));
                 break;
             }
             case OP_CMP:{
-                int b = pop(&vm->stack);
-                int a = pop(&vm->stack);
-                if(a<b) push(&vm->stack,1);
-                else push(&vm->stack,0);
+                Value b = pop(&vm->stack);
+                Value a = pop(&vm->stack);
+                if(a.as.i < b.as.i) push(&vm->stack,make_int_value(1));
+                else push(&vm->stack,make_int_value(0));
                 break;
             }
             case OP_HALT:{
@@ -98,25 +99,25 @@ void vm_run(VM *vm){
             }
             case OP_JZ:{
                 int address = vm->bytecode[vm->pc++];
-                int condition = pop(&vm->stack);
-                if(condition==0) vm->pc = address;
+                Value condition = pop(&vm->stack);
+                if(condition.as.i==0) vm->pc = address;
                 break;
             }
             case OP_JNZ:{
                 int address = vm->bytecode[vm->pc++];
-                int condition = pop(&vm->stack);
-                if(condition!=0) vm->pc = address;
+                Value condition = pop(&vm->stack);
+                if(condition.as.i!=0) vm->pc = address;
                 break;
             }
             case OP_STORE:{
                 int index = vm->bytecode[vm->pc++];
-                int top = pop(&vm->stack);
+                Value top = pop(&vm->stack);
                 if(index>=MEM_SIZE){
                     printf("Memory Overflwo\n");
                     vm->running = 0;
                     break;
                 }
-                vm->memory[index] = top;
+                vm->memory[index] = top.as.i;
                 vm->valid[index] = 1;
                 break;
             }
@@ -128,7 +129,7 @@ void vm_run(VM *vm){
                     break;
                 }
                 int value = vm->memory[index];
-                push(&vm->stack,value);
+                push(&vm->stack,make_int_value(value));
                 break;
             }
             case OP_CALL:{
