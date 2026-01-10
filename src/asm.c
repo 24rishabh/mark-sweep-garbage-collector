@@ -3,23 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 
-/*
-  Lab-4 Assembler (two-pass) with label support.
-
-  Input  : .asm text
-  Output : .bc text containing integers separated by spaces
-
-  IMPORTANT for this VM:
-  - Jump/CALL addresses are indices in the integer bytecode array.
-    (Because vm->pc indexes int* bytecode, and each opcode/operand is one int.)
-
-  Supported label syntax:
-    LABEL:
-    LABEL: INSTR [OPERAND]
-
-  Comments:
-    ';' or '#' start a comment until end of line.
-*/
 
 typedef struct {
     const char *mnemonic;
