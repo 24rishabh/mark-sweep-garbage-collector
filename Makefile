@@ -32,10 +32,14 @@ $(VM): $(VM_SRC)
 $(ASM): $(ASM_SRC)
 	$(CC) $(CFLAGS) $(ASM_SRC) -o $(ASM)
 
-# Run one benchmark (example: program1.asm)
+# Run target with input ASM file
+# Usage: make run FILE=benchmark/program1.asm
 run: $(VM) $(ASM)
-	./$(ASM) $(BENCH_DIR)/program1.asm program1.bc
-	./$(VM) program1.bc
+ifndef FILE
+	$(error Usage: make run FILE=path/to/program.asm)
+endif
+	./$(ASM) $(FILE) program.bc
+	./$(VM) program.bc
 
 # Clean generated files
 clean:
