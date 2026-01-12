@@ -38,6 +38,7 @@ void vm_run(VM *vm){
     while(vm->running){
         int instruction = vm->bytecode[vm->pc++];
         vm->instruction_count++;
+        if(vm->instruction_count%10==0) gc(vm);
         switch(instruction){
             case OP_PUSH:{
                 int value = vm->bytecode[vm->pc++];
