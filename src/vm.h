@@ -23,5 +23,7 @@ typedef struct{
 
 void vm_init(VM *vm,int *bytecode);
 void vm_run(VM *vm);
+void gc(VM *vm); // GC entry point
+void mark_root(VM *vm);
 
 #endif
