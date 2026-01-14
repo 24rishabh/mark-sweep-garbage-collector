@@ -17,7 +17,8 @@ VM_SRC = \
 	$(SRC_DIR)/stack.c \
 	$(SRC_DIR)/loader.c \
 	$(SRC_DIR)/value.c \
-	$(SRC_DIR)/object.c
+	$(SRC_DIR)/object.c \
+	$(SRC_DIR)/gc.c
 
 ASM_SRC = $(SRC_DIR)/asm.c
 
