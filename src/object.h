@@ -4,7 +4,9 @@
 #include "value.h"
 
 typedef enum{
-    OBJ_PAIR
+    OBJ_PAIR,
+    OBJ_FUNCTION,
+    OBJ_CLOSURE
 }ObjType;
 
 typedef struct Obj{
@@ -16,7 +18,17 @@ typedef struct Obj{
             Value left;
             Value right;
         }pair;
+        
+        struct{
+            int address;        // Bytecode address
+            int arity;          // Number of parameters
+        }function;
+        
+        struct{
+            struct Obj *function;  // The function object
+            struct Obj *env;       // Captured environment
+        }closure;
     }as;
-}obj;
+}Obj;
 
 #endif
