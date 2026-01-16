@@ -1,0 +1,76 @@
+
+=== Test 1.6.1: Basic Reachability ===
+Result: PASS ✓
+Heap before: 1, after: 1
+Expected: Object 'a' survives, heap remains at 1 object
+
+=== Test 1.6.2: Unreachable Object Collection ===
+Result: PASS ✓
+Heap before: 1, after: 0
+Expected: Object 'a' is freed, heap is empty
+
+=== Test 1.6.3: Transitive Reachability ===
+Result: PASS ✓
+Heap before: 2, after: 2
+Expected: Both 'a' and 'b' survive (b references a)
+
+=== Test 1.6.4: Cyclic References ===
+Result: PASS ✓
+Heap before: 2, after: 2
+Expected: Both objects survive (a->b->a cycle)
+
+=== Test 1.6.5: Deep Object Graph ===
+Creating chain of 10,000 objects...
+  Created 2000 objects...
+  Created 4000 objects...
+  Created 6000 objects...
+  Created 8000 objects...
+Running GC on 10000 objects...
+Result: PASS ✓
+Heap before: 10000, after: 10000
+Expected: All 10,000 objects survive, no stack overflow
+GC pause time: 0.000261 seconds
+
+=== Test 1.6.6: Closure Capture ===
+Created environment (pair with value 42)
+Created function (address=100, arity=1)
+Created closure (captures function and environment)
+Heap before GC: 3 objects (env, fn, closure)
+Heap after GC: 3 objects
+Result: PASS ✓
+Expected: Closure, function, and environment survive
+
+=== Test 1.6.7: Stress Allocation ===
+Allocating 100,000 objects without references...
+  Allocated 20000 objects, heap size: 20001
+  Allocated 40000 objects, heap size: 40001
+  Allocated 60000 objects, heap size: 60001
+  Allocated 80000 objects, heap size: 80001
+Running GC on 100000 objects...
+Result: PASS ✓
+Heap before: 100000, after: 0
+Expected: Heap is empty (all objects collected)
+GC pause time: 0.001353 seconds
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  BONUS TEST CASES (Memory Root Set)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+=== BONUS: Memory-Stored Objects ===
+Created object: pair(42, 99)
+Stored object in memory[0]
+Stack is empty (sp = -1)
+Heap before GC: 1 objects
+Heap after GC: 1 objects
+Result: PASS ✓
+Expected: Object survives (referenced from memory)
+
+=== BONUS: Multiple Objects in Memory ===
+Created 3 objects
+Stored obj1 in memory[0]
+Stored obj2 in memory[5]
+obj3 is unreferenced
+Heap before GC: 3 objects
+Heap after GC: 2 objects
+Result: PASS ✓
+Expected: 2 objects survive (obj1, obj2), 1 collected (obj3)
