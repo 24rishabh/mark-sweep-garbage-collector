@@ -40,6 +40,11 @@ void gc(VM *vm){
         }
     }
     
+    // Optional: print GC stats
+    #ifdef GC_DEBUG
+    printf("[GC] Run #%ld: Collected %d objects (%d -> %d) in %.6f seconds\n", 
+           vm->gc_stats.total_gc_calls, collected, before, after, gc_time);
+    #endif
 }
 
 void mark_roots(VM *vm){
