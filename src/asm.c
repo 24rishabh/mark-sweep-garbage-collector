@@ -17,6 +17,9 @@ static Instr table[] = {
     {"JMP",  32,  1}, {"JZ",   33,  1}, {"JNZ",  34,  1},
     {"STORE",48,  1}, {"LOAD", 49,  1},
     {"CALL", 64,  1}, {"RET",  65,  0},
+    {"NEW_PAIR", 80, 0}, {"PAIR_LEFT", 81, 0}, {"PAIR_RIGHT", 82, 0},
+    {"SET_LEFT", 83, 0}, {"SET_RIGHT", 84, 0},
+    {"GC", 96, 0},
     {"HALT", 255, 0},
     {NULL,    0,   0}
 };
