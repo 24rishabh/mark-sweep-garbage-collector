@@ -14,8 +14,8 @@ Results:
   Total batches:              100
   Objects per batch:          1,000
   Total objects created:      100000
-  Total execution time:       0.002936 seconds
-  Time per batch:             0.000029 seconds
+  Total execution time:       0.002579 seconds
+  Time per batch:             0.000026 seconds
 
 ╔════════════════════════════════════════════════════════════╗
 ║           Garbage Collection Performance Report           ║
@@ -31,10 +31,10 @@ Memory Statistics:
 
 Garbage Collection Statistics:
   Total GC invocations:       100
-  Total GC time:              0.001729 seconds
-  Average GC pause:           0.000017 seconds
-  Min GC pause:               0.000016 seconds
-  Max GC pause:               0.000022 seconds
+  Total GC time:              0.001491 seconds
+  Average GC pause:           0.000015 seconds
+  Min GC pause:               0.000014 seconds
+  Max GC pause:               0.000018 seconds
   Average objects/collection: 1000.0
 
 Collection Efficiency:
@@ -71,7 +71,7 @@ Performance Impact:
 Results:
   Objects created:            50000
   Objects surviving:          50000
-  Total execution time:       0.010868 seconds
+  Total execution time:       0.010924 seconds
 
 ╔════════════════════════════════════════════════════════════╗
 ║           Garbage Collection Performance Report           ║
@@ -87,10 +87,10 @@ Memory Statistics:
 
 Garbage Collection Statistics:
   Total GC invocations:       10
-  Total GC time:              0.010030 seconds
-  Average GC pause:           0.001003 seconds
-  Min GC pause:               0.000693 seconds
-  Max GC pause:               0.001316 seconds
+  Total GC time:              0.010154 seconds
+  Average GC pause:           0.001015 seconds
+  Min GC pause:               0.000957 seconds
+  Max GC pause:               0.001209 seconds
   Average objects/collection: 0.0
 
 Collection Efficiency:
@@ -119,7 +119,7 @@ Results:
   Total objects created:      51000
   Objects collected:          50000
   Objects surviving:          1000
-  Total execution time:       0.001627 seconds
+  Total execution time:       0.002077 seconds
 
 ╔════════════════════════════════════════════════════════════╗
 ║           Garbage Collection Performance Report           ║
@@ -135,10 +135,10 @@ Memory Statistics:
 
 Garbage Collection Statistics:
   Total GC invocations:       50
-  Total GC time:              0.001236 seconds
-  Average GC pause:           0.000025 seconds
-  Min GC pause:               0.000024 seconds
-  Max GC pause:               0.000026 seconds
+  Total GC time:              0.001593 seconds
+  Average GC pause:           0.000032 seconds
+  Min GC pause:               0.000031 seconds
+  Max GC pause:               0.000034 seconds
   Average objects/collection: 1000.0
 
 Collection Efficiency:
@@ -157,16 +157,45 @@ Performance Impact:
 
   Test 1: WITH garbage collection
     Allocated 10,000 objects with periodic GC
-    Time: 0.000243 seconds
+    Time: 0.000320 seconds
     GC calls: 100
-    Total GC time: 0.000151 seconds
+    Total GC time: 0.000201 seconds
 
   Test 2: WITHOUT garbage collection
     Allocated 10,000 objects without GC
-    Time: 0.000094 seconds
+    Time: 0.000109 seconds
     Final heap size: 10000 objects
 
   Analysis:
-    Allocation time:            0.000094 seconds
-    Allocation + GC time:       0.000243 seconds
-    GC overhead:                0.000151 seconds (62.1%)
+    Allocation time:            0.000109 seconds
+    Allocation + GC time:       0.000320 seconds
+    GC overhead:                0.000201 seconds (62.8%)
+
+╔════════════════════════════════════════════════════════════╗
+║           Garbage Collection Performance Report           ║
+╚════════════════════════════════════════════════════════════╝
+
+Memory Statistics:
+  Total objects allocated:    10000
+  Total objects freed:        9901
+  Objects still alive:        99
+  Peak heap size:             100 objects
+  Memory per object:          48 bytes
+  Peak memory usage:          ~4800 bytes
+
+Garbage Collection Statistics:
+  Total GC invocations:       100
+  Total GC time:              0.000201 seconds
+  Average GC pause:           0.000002 seconds
+  Min GC pause:               0.000001 seconds
+  Max GC pause:               0.000003 seconds
+  Average objects/collection: 99.0
+
+Collection Efficiency:
+  Collection rate:            99.0%
+  Survival rate:              1.0%
+
+Performance Impact:
+  Total instructions:         0
+
+╚════════════════════════════════════════════════════════════╝

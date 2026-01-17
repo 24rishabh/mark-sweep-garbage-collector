@@ -224,6 +224,7 @@ void benchmark_gc_overhead() {
     printf("    GC overhead:                %.6f seconds (%.1f%%)\n", 
            vm1.gc_stats.total_gc_time,
            (vm1.gc_stats.total_gc_time / time_with_gc) * 100.0);
+    print_gc_stats(&vm1);
 }
 
 int main() {
